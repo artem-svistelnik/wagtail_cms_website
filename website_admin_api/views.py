@@ -43,5 +43,5 @@ class GetSubscriptionView(APIView):
                 new_subscriber.save()
                 return Response({'Success': 'New subscriber saved'}, status=status.HTTP_201_CREATED)
         except Exception as e:
-            print(e)
-            return Response({'Fail': 'data invalid'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'Fail': 'data invalid',
+                             'Excaption':e}, status=status.HTTP_400_BAD_REQUEST)

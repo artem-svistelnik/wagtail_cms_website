@@ -110,7 +110,7 @@ class ActivitiesPage(Page):
         APIField('activities'),
     ]
     parent_page_types = ['website_admin_api.HomePage']
-    subpage_types = ['website_admin_api.ActivitiesPage', ]
+    subpage_types = ['website_admin_api.Activities', ]
     class Meta:
         verbose_name='Страница "услуги / направления деятельности"'
 
