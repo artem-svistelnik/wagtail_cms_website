@@ -8,6 +8,7 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 from search import views as search_views
 from website_admin_api.api import api_router
+from website_admin_api import views as website_admin_api_view
 urlpatterns = [
     path('django-admin/', admin.site.urls),
 
@@ -15,8 +16,10 @@ urlpatterns = [
     path('documents/', include(wagtaildocs_urls)),
 
     path('search/', search_views.search, name='search'),
-    path('feedback/',include('website_admin_api.urls')),
     path('api/', api_router.urls),
+    # path('feedback/', include('website_admin_api.urls')),
+    path('feedback/',website_admin_api_view.FeedbackView.as_view(),name='feedback'),
+    path('get_subscription/',website_admin_api_view.GetSubscriptionView.as_view(),name='subscription'),
 ]
 
 

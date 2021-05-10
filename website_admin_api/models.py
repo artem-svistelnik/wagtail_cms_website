@@ -48,6 +48,14 @@ class HomePage(Page):
     class Meta:
         verbose_name='Главная страница'
 
+    subpage_types=['website_admin_api.AboutCompanyPage',
+                   'website_admin_api.ActivitiesPage',
+                   'website_admin_api.NewsPublicationPage',
+                   'website_admin_api.TeamPage',
+                   'website_admin_api.ContactsPage',
+
+                   ]
+
 
 
 class HomeHeaderGalleryImage(Orderable):
@@ -86,32 +94,37 @@ class AboutCompanyPage(Page):
     ]
     parent_page_types = ['website_admin_api.HomePage']
     class Meta:
-        verbose_name='О компании'
+        verbose_name = 'Страница "О компании"'
+
 
 class ActivitiesPage(Page):
     home_page=models.ForeignKey(HomePage, on_delete=models.CASCADE, related_name='activities_page',verbose_name='Домашння страница для страницы Направления деятельности')
 
     content_panels = Page.content_panels + [
         FieldPanel('home_page', ),
-        InlinePanel('activities', label="Виды деятельности"),
     ]
     api_fields = [
-
-        APIField('home_page'),
+        # APIField('home_page'),
+        APIField('title_ru'),
+        APIField('title_uk'),
         APIField('activities'),
     ]
     parent_page_types = ['website_admin_api.HomePage']
+    subpage_types = ['website_admin_api.ActivitiesPage', ]
     class Meta:
         verbose_name='Страница "услуги / направления деятельности"'
 
-class Activities(Orderable):
-    page=ParentalKey(ActivitiesPage, on_delete=models.CASCADE, related_name='activities',verbose_name='Вид деятельности')
+
+class Activities(Page,Orderable):
+    page=ParentalKey(ActivitiesPage, on_delete=models.CASCADE, related_name='activities',verbose_name='Страница Видов деятельности')
     kind_of_activity=models.TextField(max_length=1000,verbose_name='Вид деятельности')
     activity_image=models.ForeignKey(
         'wagtailimages.Image', on_delete=models.CASCADE, related_name='activity_image',
         verbose_name='Изображение для вида деятельности',blank=False)
     activity_image_caption = models.CharField(blank=True, max_length=250, verbose_name='Подпись к изображению')
-    panels = [
+    content_panels = [
+        FieldPanel('page', ),
+        FieldPanel('title', ),
         FieldPanel('kind_of_activity'),
         ImageChooserPanel('activity_image'),
         FieldPanel('activity_image_caption'),
@@ -120,6 +133,8 @@ class Activities(Orderable):
         return self.kind_of_activity
 
     api_fields = [
+        APIField('title_ru'),
+        APIField('title_uk'),
         APIField('kind_of_activity_ru'),
         APIField('kind_of_activity_uk'),
         APIField('activity_image'),
@@ -127,10 +142,15 @@ class Activities(Orderable):
         APIField('activity_image_caption_uk'),
     ]
 
+    class Meta:
+        verbose_name='Услуга / направление деятельности"'
+        verbose_name_plural='Услуги / направления деятельности"'
+
+
+    parent_page_types = ['website_admin_api.ActivitiesPage',]
 
 
 class HeadingNewsPublicationsTypes(Orderable,ClusterableModel):
-# class HeadingNewsPublicationsTypes(Orderable):
     name_heading_ru=models.CharField(max_length=255,verbose_name='Название рубрики')
     name_heading_uk=models.CharField(max_length=255,verbose_name='Назва рубрики',)
 
@@ -159,10 +179,15 @@ class NewsPublicationPage(Page):
         FieldPanel('home_page',),
     ]
     parent_page_types=['website_admin_api.HomePage']
-
+    subpage_types = ['website_admin_api.NewsPublication', ]
     api_fields = [
         APIField('news_publications'),
     ]
+
+    class Meta:
+        verbose_name = 'Страница "Новости"'
+
+
 class NewsPublicationTag(TaggedItemBase):
 
     content_object = ParentalKey(
@@ -179,10 +204,10 @@ class NewsPublicationTag(TaggedItemBase):
     class Meta:
         verbose_name='Новости/Публикации'
 
-# class NewsPublicationPage(Page,models.Model):
+
 class NewsPublication(Page,Orderable):
     page = ParentalKey(NewsPublicationPage, on_delete=models.CASCADE, related_name='news_publications',
-                       verbose_name='Новости/Публикации')
+                       verbose_name='Домашння страница для страницы "Новости/Публикации')
     publication_heading=ParentalKey(HeadingNewsPublicationsTypes,related_name='publication',on_delete=models.CASCADE,verbose_name='Название рубрики')
     publication_title=models.CharField(max_length=255,verbose_name='Название публикации/новости')
     publication_text =models.TextField(max_length=10000,verbose_name='Текст публикации/новости')
@@ -257,6 +282,7 @@ class TeamPage(Page):
         APIField('team_members'),
     ]
     parent_page_types = ['website_admin_api.HomePage']
+    subpage_types = ['website_admin_api.TeamMember', ]
     class Meta:
         verbose_name='Команда'
 
@@ -308,6 +334,7 @@ class TeamMember(Page,Orderable):
     parent_page_types = ['website_admin_api.TeamPage']
 
 
+
 class ContactsPage(Page):
     page = models.ForeignKey(HomePage, on_delete=models.CASCADE, related_name='contact_page',
                              verbose_name='Домашняя страница для страницы "Контакты"')
@@ -323,6 +350,7 @@ class ContactsPage(Page):
         APIField('contacts'),
     ]
     parent_page_types = ['website_admin_api.HomePage']
+    subpage_types = ['website_admin_api.Contacts', ]
     class Meta:
         verbose_name='Контакты'
 
@@ -356,3 +384,11 @@ class Contacts(Page,Orderable):
     parent_page_types = ['website_admin_api.ContactsPage']
     class Meta:
         verbose_name='Елемент списка контактов'
+
+
+
+class Subscribers(models.Model):
+    email=models.EmailField(unique=True,verbose_name='E-mail подписчика')
+
+    def __str__(self):
+        return self.email
