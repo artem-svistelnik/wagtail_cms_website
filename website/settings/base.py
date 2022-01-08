@@ -19,8 +19,8 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
-
-
+# ALLOWED_HOSTS = ['68.183.4.105', '127.0.0.1']
+#
 # Application definition
 
 INSTALLED_APPS = [
@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
 # multilang
-   'wagtail_modeltranslation',
+#    'wagtail_modeltranslation',
     # api
     'wagtail.api.v2',
     'phonenumber_field',
@@ -178,13 +178,19 @@ WAGTAIL_SITE_NAME = "website"
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 BASE_URL = 'http://example.com'
-WAGTAIL_CONTENT_LANGUAGES =LANGUAGES = (
-   ('ru', u'Russian'),
-   ('uk', u'Ukrainian'),
- )
-MODELTRANSLATION_LANGUAGES=[
-'ru','uk'
-]
+
+
+# WAGTAIL_CONTENT_LANGUAGES =LANGUAGES = (
+#    ('ru', u'Russian'),
+#    ('uk', u'Ukrainian'),
+#  )
+# MODELTRANSLATION_LANGUAGES=[
+# 'ru',
+# 'uk'
+# ]
+
+
+
 import dj_database_url
 db_from_env=dj_database_url.config()
 DATABASES['default'].update(db_from_env)
