@@ -363,9 +363,9 @@ class ContactsPage(Page):
 
     api_fields = [
         APIField('title'),
-        FieldPanel('full_name', ),
-        FieldPanel('email', ),
-        FieldPanel('phone', ),
+        APIField('full_name', ),
+        APIField('email', ),
+        APIField('phone', ),
         # APIField('title_ru'),
         # APIField('title_uk'),
         # APIField('contacts'),
