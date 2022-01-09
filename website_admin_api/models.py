@@ -238,7 +238,7 @@ class NewsPublication(Page,Orderable):
 
         APIField('publication_title'),
         APIField('publication_text'),
-
+        APIField('publication_image'),
         APIField('caption'),
 
         # APIField('publication'),
