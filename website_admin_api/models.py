@@ -238,9 +238,10 @@ class NewsPublication(Page,Orderable):
 
         APIField('publication_title'),
         APIField('publication_text'),
-        APIField('publication'),
+
         APIField('caption'),
 
+        # APIField('publication'),
         # APIField('publication_heading'),
         # APIField('publication_title_ru'),
         # APIField('publication_title_uk'),
