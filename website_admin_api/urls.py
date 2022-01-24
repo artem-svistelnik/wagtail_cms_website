@@ -9,7 +9,7 @@ app_name = "website_admin_api"
 from .api import api_router
 from .views import FeedbackView # ,GetSubscriptionView
 urlpatterns = [
-    path('', FeedbackView.as_view(),name='feedback'),
+    # path('', FeedbackView.as_view(),name='feedback'),
     # path('', GetSubscriptionView.as_view(),name='subscription'),
 
 ]

@@ -9,6 +9,8 @@ from rest_framework import status
 import json
 # from .models import Subscribers
 
+from .models import Feedback
+
 class FeedbackView(APIView):
     def post(self,request):
         try:
@@ -18,10 +20,20 @@ class FeedbackView(APIView):
                 data = request.data
             else:
                 data = json.loads(str(request.data))
+            new_feedback=Feedback.objects.create(name=data['name'],
+                                                 contact_data=data['contact_data'],
+                                                 text_of_request=data['text_of_request'])
+            print(new_feedback)
+            new_feedback.save()
+            print(new_feedback)
             return Response({'Success': 'feedback data save'}, status=status.HTTP_201_CREATED)
         except Exception as e:
             print(e)
-            return Response({'Fail': 'data invalid'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"Fail": "data invalid",
+                             "Example":{"name":"first name,last name",
+                                        "contact_data":"phone or email",
+                                        "text_of_request":"some text"}},
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
 

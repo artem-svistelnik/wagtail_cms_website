@@ -16,6 +16,8 @@ from django.contrib import admin
 from .models import Feedback
 @admin.register(Feedback)
 class AdminSubscribers(admin.ModelAdmin):
-    list_display = ('id','name','status')
-    list_filter = ('status',)
-    ordering = ('status',)
+    list_display = ('id','name','status','created')
+    list_filter = ('status','created')
+    ordering = ('status','created')
+
+
