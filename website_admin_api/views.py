@@ -23,9 +23,7 @@ class FeedbackView(APIView):
             new_feedback=Feedback.objects.create(name=data['name'],
                                                  contact_data=data['contact_data'],
                                                  text_of_request=data['text_of_request'])
-            print(new_feedback)
             new_feedback.save()
-            print(new_feedback)
             return Response({'Success': 'feedback data save'}, status=status.HTTP_201_CREATED)
         except Exception as e:
             print(e)
