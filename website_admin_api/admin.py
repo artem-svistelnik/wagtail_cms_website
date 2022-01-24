@@ -13,4 +13,9 @@ from django.contrib import admin
 
 
 #TODO Добавить в админку инфу о заявках
-
+from .models import Feedback
+@admin.register(Feedback)
+class AdminSubscribers(admin.ModelAdmin):
+    list_display = ('id','name','status')
+    list_filter = ('status')
+    ordering = ('status',)

@@ -1,28 +1,27 @@
 from django.db import models
 
-from wagtail.core.models import Page,Orderable
-from wagtail.core.fields import RichTextField,Creator,StreamField
-from wagtail.admin.edit_handlers import FieldPanel,InlinePanel,MultiFieldPanel
+from wagtail.core.models import Page, Orderable
+from wagtail.core.fields import RichTextField, Creator, StreamField
+from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
 
-#api
+# api
 from wagtail.api import APIField
-
 
 from phonenumber_field.modelfields import PhoneNumberField
 from wagtail.images.edit_handlers import ImageChooserPanel
 from modelcluster.fields import ParentalKey
 from django.utils import timezone
-#Теги
+# Теги
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 from modelcluster.models import ClusterableModel
 
 
-
 class HomePage(Page):
-    contact_data_email = models.EmailField(blank=False,verbose_name='Email для связи',default='example@mail.com')
-    contact_data_phone = PhoneNumberField(blank=False, region='UA', verbose_name='Контактный номер',default='+380999999999')
+    contact_data_email = models.EmailField(blank=False, verbose_name='Email для связи', default='example@mail.com')
+    contact_data_phone = PhoneNumberField(blank=False, region='UA', verbose_name='Контактный номер',
+                                          default='+380999999999')
 
     # company_position = RichTextField(blank=True,verbose_name='Позиция/философия компании')
     content_panels = Page.content_panels + [
@@ -37,7 +36,6 @@ class HomePage(Page):
         APIField('contact_data_email'),
         APIField('contact_data_phone'),
 
-
         # APIField('title_ru'),
         # APIField('title_uk'),
         # APIField('company_position_ru'),
@@ -48,17 +46,17 @@ class HomePage(Page):
         # APIField('gallery_images'),
         # APIField('about_company_page'),
     ]
+
     class Meta:
-        verbose_name='Главная страница'
+        verbose_name = 'Главная страница'
 
-    subpage_types=[
-                   # 'website_admin_api.AboutCompanyPage',
-                   # 'website_admin_api.ActivitiesPage',
-                   'website_admin_api.NewsPublicationPage',
-                   'website_admin_api.TeamPage',
-                   'website_admin_api.ContactsPage',
-                   ]
-
+    subpage_types = [
+        # 'website_admin_api.AboutCompanyPage',
+        # 'website_admin_api.ActivitiesPage',
+        'website_admin_api.NewsPublicationPage',
+        'website_admin_api.TeamPage',
+        'website_admin_api.ContactsPage',
+    ]
 
 
 # class HomeHeaderGalleryImage(Orderable):
@@ -170,12 +168,12 @@ class HomePage(Page):
 #         ]
 
 class NewsPublicationPage(Page):
-    home_page=models.ForeignKey(HomePage, on_delete=models.CASCADE, related_name='news_publication_page',
-                                verbose_name='Домашння страница для страницы "Новости"')
+    home_page = models.ForeignKey(HomePage, on_delete=models.CASCADE, related_name='news_publication_page',
+                                  verbose_name='Домашння страница для страницы "Новости"')
     content_panels = Page.content_panels + [
-        FieldPanel('home_page',),
+        FieldPanel('home_page', ),
     ]
-    parent_page_types=['website_admin_api.HomePage']
+    parent_page_types = ['website_admin_api.HomePage']
     subpage_types = ['website_admin_api.NewsPublication', ]
     api_fields = [
         APIField('news_publications'),
@@ -202,17 +200,17 @@ class NewsPublicationPage(Page):
 #         verbose_name='Новости/Публикации'
 
 
-class NewsPublication(Page,Orderable):
+class NewsPublication(Page, Orderable):
     page = ParentalKey(NewsPublicationPage, on_delete=models.CASCADE, related_name='news_publications',
                        verbose_name='Домашння страница для страницы "Новости/Публикации')
     # publication_heading=ParentalKey(HeadingNewsPublicationsTypes,related_name='publication',on_delete=models.CASCADE,verbose_name='Название рубрики')
-    publication_title=models.CharField(max_length=255,verbose_name='Название публикации/новости')
-    publication_text =models.TextField(max_length=10000,verbose_name='Текст публикации/новости')
+    publication_title = models.CharField(max_length=255, verbose_name='Название публикации/новости')
+    publication_text = models.TextField(max_length=10000, verbose_name='Текст публикации/новости')
     # tags = ClusterTaggableManager(through=NewsPublicationTag,blank=True,related_name='news_tags')
 
     publication_image = models.ForeignKey('wagtailimages.Image', blank=False,
-                                                                 on_delete=models.CASCADE,
-                                                                 related_name='+',)
+                                          on_delete=models.CASCADE,
+                                          related_name='+', )
     publish = models.DateTimeField(default=timezone.now, verbose_name='Дата публикации/новости')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания публикации/новости',
                                    editable=False)
@@ -253,9 +251,9 @@ class NewsPublication(Page,Orderable):
         # APIField('caption_uk'),
     ]
     parent_page_types = ['website_admin_api.NewsPublicationPage']
-    class Meta:
-        verbose_name='Отдельная Новость'
 
+    class Meta:
+        verbose_name = 'Отдельная Новость'
 
 
 class TeamPage(Page):
@@ -264,8 +262,8 @@ class TeamPage(Page):
     # key_phrase_title=models.CharField(max_length=255,verbose_name='Ключевая фраза/Заголовок (о кадровой политике компании)')
     # key_phrase_text = RichTextField(verbose_name='Текст-расшифровка ключевой фразы/заголовка')
     content_panels = [
-        FieldPanel('page',),
-        FieldPanel('title',),
+        FieldPanel('page', ),
+        FieldPanel('title', ),
         # FieldPanel('key_phrase_title'),
         # FieldPanel('key_phrase_text'),
     ]
@@ -283,17 +281,18 @@ class TeamPage(Page):
     ]
     parent_page_types = ['website_admin_api.HomePage']
     subpage_types = ['website_admin_api.TeamMember', ]
+
     class Meta:
-        verbose_name='Команда'
+        verbose_name = 'Команда'
 
 
-class TeamMember(Page,Orderable):
-    page=ParentalKey(TeamPage, on_delete=models.CASCADE, related_name='team_members',verbose_name='Страница команды')
-    full_name=models.CharField(max_length=255,verbose_name='ФИО',blank=False)
-    competence=models.TextField(max_length=510,verbose_name='Cфера компетенции',blank=False)
-    professional_credo=models.TextField(max_length=510,verbose_name='Профессиональное кредо',blank=False)
-    additional_information=models.TextField(max_length=1000,verbose_name='Дополнительная информация')
-    photo=models.ForeignKey(
+class TeamMember(Page, Orderable):
+    page = ParentalKey(TeamPage, on_delete=models.CASCADE, related_name='team_members', verbose_name='Страница команды')
+    full_name = models.CharField(max_length=255, verbose_name='ФИО', blank=False)
+    competence = models.TextField(max_length=510, verbose_name='Cфера компетенции', blank=False)
+    professional_credo = models.TextField(max_length=510, verbose_name='Профессиональное кредо', blank=False)
+    additional_information = models.TextField(max_length=1000, verbose_name='Дополнительная информация')
+    photo = models.ForeignKey(
         'wagtailimages.Image', on_delete=models.CASCADE, related_name='photo',
         verbose_name='Фото учасника команды', blank=False)
     photo_caption = models.CharField(blank=True, max_length=250, verbose_name='Подпись к изображению')
@@ -322,7 +321,6 @@ class TeamMember(Page,Orderable):
         APIField('photo'),
         APIField('photo_caption'),
 
-
         # APIField('title_ru'),
         # APIField('title_uk'),
         # APIField('full_name_ru'),
@@ -337,11 +335,11 @@ class TeamMember(Page,Orderable):
         # APIField('photo_caption_ru'),
         # APIField('photo_caption_uk'),
     ]
+
     class Meta:
-        verbose_name='Участник команды'
+        verbose_name = 'Участник команды'
 
     parent_page_types = ['website_admin_api.TeamPage']
-
 
 
 class ContactsPage(Page):
@@ -353,10 +351,9 @@ class ContactsPage(Page):
     phone = PhoneNumberField(blank=True, region='UA', verbose_name='Контактный номер',
                              default='+380999999999')
 
-
     content_panels = [
-        FieldPanel('page',),
-        FieldPanel('title',),
+        FieldPanel('page', ),
+        FieldPanel('title', ),
         FieldPanel('full_name', ),
         FieldPanel('email', ),
         FieldPanel('phone', ),
@@ -372,11 +369,10 @@ class ContactsPage(Page):
         # APIField('contacts'),
     ]
     parent_page_types = ['website_admin_api.HomePage']
+
     # subpage_types = ['website_admin_api.Contacts', ]
     class Meta:
-        verbose_name='Контакты'
-
-
+        verbose_name = 'Контакты'
 
 
 # class Contacts(Page,Orderable):
@@ -418,7 +414,6 @@ class ContactsPage(Page):
 #         verbose_name='Елемент списка контактов'
 
 
-
 # class Subscribers(models.Model):
 #     email=models.EmailField(unique=True,verbose_name='E-mail подписчика')
 #
@@ -428,3 +423,17 @@ class ContactsPage(Page):
 #
 #     def __str__(self):
 #         return self.email
+
+class Feedback(models.Model):
+    name = models.CharField(max_length=250, verbose_name='ФИО')
+    contact_data = models.CharField(max_length=500, verbose_name='Контактные данные')
+    text_of_request = models.TextField(verbose_name='Текст заявки')
+    status=models.BooleanField(verbose_name='Статус заявки')
+
+    def __str__(self):
+        return f'Заявка № {id}'
+
+    class Meta:
+        verbose_name='Заявка'
+        verbose_name_plural='Заявки'
+
