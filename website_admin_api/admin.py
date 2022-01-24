@@ -17,5 +17,5 @@ from .models import Feedback
 @admin.register(Feedback)
 class AdminSubscribers(admin.ModelAdmin):
     list_display = ('id','name','status')
-    list_filter = ('status')
+    list_filter = ('status',)
     ordering = ('status',)
