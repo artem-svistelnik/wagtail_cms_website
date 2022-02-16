@@ -428,13 +428,29 @@ class Feedback(models.Model):
     name = models.CharField(max_length=250, verbose_name='ФИО')
     contact_data = models.CharField(max_length=500, verbose_name='Контактные данные')
     text_of_request = models.TextField(verbose_name='Текст заявки')
-    created=models.DateTimeField(auto_now_add=True,verbose_name='Дата и время заявки')
-    status=models.BooleanField(verbose_name='Статус заявки',default=False)
+    created = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время заявки')
+    status = models.BooleanField(verbose_name='Статус заявки', default=False)
 
     def __str__(self):
         return f'Заявка № {self.id}'
 
     class Meta:
-        verbose_name='Заявка'
-        verbose_name_plural='Заявки'
+        verbose_name = 'Заявка'
+        verbose_name_plural = 'Заявки'
 
+
+class FeedbackForTeamMember(models.Model):
+    team_member = models.ForeignKey(TeamMember, on_delete=models.CASCADE, verbose_name="Объект обращения")
+    name = models.CharField(max_length=250, verbose_name='ФИО')
+    contact_data = models.CharField(max_length=500, verbose_name='Контактные данные')
+    text_of_request = models.TextField(verbose_name='Текст заявки')
+    created = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время заявки',)
+    status = models.BooleanField(verbose_name='Статус заявки', default=False)
+
+
+    def __str__(self):
+        return f'Заявка № {self.id} к {self.team_member.full_name}'
+
+    class Meta:
+        verbose_name = 'Заявка к участнику команды'
+        verbose_name_plural = 'Заявки к участникам команды'

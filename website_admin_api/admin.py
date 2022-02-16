@@ -11,13 +11,17 @@ from django.contrib import admin
 #     list_display = ('email','id')
 
 
+from .models import Feedback, FeedbackForTeamMember
 
-#TODO Добавить в админку инфу о заявках
-from .models import Feedback
+
 @admin.register(Feedback)
-class AdminSubscribers(admin.ModelAdmin):
-    list_display = ('id','name','status','created')
-    list_filter = ('status','created')
-    ordering = ('status','created')
+class AdminFeedback(admin.ModelAdmin):
+    list_display = ('id', 'name', 'status', 'created')
+    list_filter = ('status', 'created')
+    ordering = ('status', 'created')
 
-
+@admin.register(FeedbackForTeamMember)
+class AdminFeedbackForTeamMember(admin.ModelAdmin):
+    list_display = ('id', 'name', 'status', 'created','team_member')
+    list_filter = ('status', 'created','team_member')
+    ordering = ('status', 'created','team_member')

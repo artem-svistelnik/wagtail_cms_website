@@ -19,6 +19,7 @@ urlpatterns = [
     path('api/', api_router.urls),
     # path('feedback/', include('website_admin_api.urls')),
     path('feedback/',website_admin_api_view.FeedbackView.as_view(),name='feedback'),
+    path('feedback_for_team_member/',website_admin_api_view.FeedbackForTeamMemberView.as_view(),name='feedback_for_team_member'),
     # path('get_subscription/',website_admin_api_view.GetSubscriptionView.as_view(),name='subscription'),
 ]
 
