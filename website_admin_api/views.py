@@ -9,7 +9,7 @@ from rest_framework import status
 import json
 # from .models import Subscribers
 
-from .models import Feedback, FeedbackForTeamMember
+from .models import Feedback, FeedbackForTeamMember,TeamMember
 
 
 class FeedbackView(APIView):
@@ -44,12 +44,25 @@ class FeedbackForTeamMemberView(APIView):
                 data = request.data
             else:
                 data = json.loads(str(request.data))
-            new_feedback = FeedbackForTeamMember.objects.create(team_member_id=int(data["team_member"]),
-                                                                name=data['name'],
-                                                                contact_data=data['contact_data'],
-                                                                text_of_request=data['text_of_request'])
-            new_feedback.save()
-            return Response({'Success': 'feedback data save'}, status=status.HTTP_201_CREATED)
+            if not data["team_member"]:
+                return Response({"Fail": "data invalid",
+                                 "Example": {"team_member": " team member page ID (int)",
+                                             "name": "first name,last name",
+                                             "contact_data": "phone or email",
+                                             "text_of_request": "some text"}},
+                                status=status.HTTP_400_BAD_REQUEST)
+            try:
+                team_member=TeamMember.objects.filter(id=int(data["team_member"])).first()
+                new_feedback = FeedbackForTeamMember.objects.create(team_member_id=team_member.id,
+                                                                    name=data['name'],
+                                                                    contact_data=data['contact_data'],
+                                                                    text_of_request=data['text_of_request'])
+                new_feedback.save()
+                return Response({'Success': 'feedback data save'}, status=status.HTTP_201_CREATED)
+            except TeamMember.DoesNotExist:
+                return Response({'Success': 'feedback data save'}, status=status.HTTP_201_CREATED)
+
+
         except Exception as e:
             print(e)
             return Response({"Fail": "data invalid",
